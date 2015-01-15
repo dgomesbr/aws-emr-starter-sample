@@ -7,7 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Created by diego.magalhaes on 1/4/2015.
+ * Created by dgomesbr on 1/4/2015.
+ * Interface with basic static strings for steps that will be used for implementations
  */
 public interface JobConfig {
     static final String STEP_CONFIG_HIVE_INSTALL = "BEAN_STEP_CONFIG_HIVE_INSTALL";

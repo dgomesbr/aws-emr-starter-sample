@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,20 +19,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Component()
 public class JobRunner {
+    public static final String JOB_VISUALIZACOES = "BEAN-revive-elb-visualizacoes";
+    public static final String JOB_PARAM_VISUALIZACOES = "logs";
     private static final Logger logger = LoggerFactory.getLogger(JobRunner.class);
-
     @Autowired
     private ApplicationContext context;
     @Autowired
     private AmazonElasticMapReduce emrClient;
     private Map<String,String> jobsAvailable = new HashMap();
-
-    public static final String JOB_PWTIM125 = "BEAN-revive-log-recomendacao";
-    public static final String JOB_PARAM_PWTIM125 = "recomendacao";
-
-    public static final String JOB_VISUALIZACOES = "BEAN-revive-elb-visualizacoes";
-    public static final String JOB_PARAM_VISUALIZACOES = "logs";
-
     @Value("${aws.logging.folder}")
     private String loggingFolder;
 
@@ -41,14 +36,22 @@ public class JobRunner {
     @Value("${aws.jobs.keypair}")
     private String keyPair;
 
+    @Value("${aws.jobs.masterInstanceType:r3.xlarge}")
+    private String masterInstanceType;
+
     public JobRunner() {
-        jobsAvailable.put(JOB_PARAM_PWTIM125,JOB_PWTIM125);
         jobsAvailable.put(JOB_PARAM_VISUALIZACOES, JOB_VISUALIZACOES);
     }
 
+    private static void failEMR(String jobFlowId, ClusterStatus status) {
+        String msg = "EMR cluster run %s terminated with errors.  ClusterStatus = %s";
+        throw new RuntimeException(String.format(msg, jobFlowId, status));
+    }
+
     private RunJobFlowRequest ConfigJobFlowRequest(JobConfig job) {
+
         return new RunJobFlowRequest()
-                .withName("[AUTO] " + job.getName())
+                .withName(job.getName())
                 .withAmiVersion(amiVersion)
                 .withSteps(job.steps())
                 .withTags(job.tags())
@@ -57,7 +60,7 @@ public class JobRunner {
                         .withEc2KeyName(keyPair)
                         .withInstanceCount(1)
                         .withKeepJobFlowAliveWhenNoSteps(false)
-                        .withMasterInstanceType("r3.xlarge"));
+                        .withMasterInstanceType(masterInstanceType));
     }
 
     public void startJob(String jobKey){
@@ -117,11 +120,6 @@ public class JobRunner {
             default:
                 failEMR(jobFlowId, status);
         }
-    }
-
-    private static void failEMR(String jobFlowId, ClusterStatus status) {
-        String msg = "EMR cluster run %s terminated with errors.  ClusterStatus = %s";
-        throw new RuntimeException(String.format(msg, jobFlowId, status));
     }
 
 }
