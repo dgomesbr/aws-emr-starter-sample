@@ -24,13 +24,13 @@ public class AwsEMRStarterApp {
 
         String jobName = args[1];
         logger.info("Starting job [" + jobName + "]");
-        JobRunner runner = (JobRunner) context.getBean(JobRunner.class);
+        JobRunner runner = context.getBean(JobRunner.class);
         runner.startJob(jobName);
         System.exit(SpringApplication.exit(context));
     }
 
     private static void showUsage() {
-        logger.warn("Usage: AwsEMRStarterApp -j [logs|recomendacao]");
+        logger.warn("Usage: AwsEMRStarterApp -j {JOBNAME}");
     }
 
 }

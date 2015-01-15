@@ -37,20 +37,20 @@ public class LogJobConfig implements JobConfig {
 
     public StepConfig customJar(){
         HadoopJarStepConfig customJarStep = new HadoopJarStepConfig()
-                .withJar("s3://tim-ads-lb-logs/AWSLogs/830062373251/EMRJavaInit/tim-ads-lb-logs.jar")
-                .withArgs("logs");
+                .withJar("s3://mybucket/custom-jar.jar")
+                .withArgs("appLog");
         return new StepConfig("Custom JAR", customJarStep).withActionOnFailure(ActionOnFailure.TERMINATE_CLUSTER);
     }
 
     public StepConfig hiveProgram(){
-        HadoopJarStepConfig customJarStep = new StepFactory().newRunHiveScriptStep("s3://tim-ads-lb-logs/AWSLogs/830062373251/EMRHiveQuery/hive-script-logs.q")
+        HadoopJarStepConfig customJarStep = new StepFactory().newRunHiveScriptStep("s3://mybucket/emr/hive/hive-script.q")
                 .withJar("s3://elasticmapreduce/libs/script-runner/script-runner.jar");
         return new StepConfig("Hive Program", customJarStep).withActionOnFailure(ActionOnFailure.TERMINATE_CLUSTER);
     }
 
     @Override
     public String getName() {
-        return "Revive Log - Visualizações";
+        return "Sample AWS EMR Script Task";
     }
 
     @Override
