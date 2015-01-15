@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.dgomesbr</groupId>
+	<artifactId>aws-emr-starter-sample</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>AWS-EMR-STARTER</name>
+	<description>Amazon EMR Starter Sample for running jobs programmatically</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.1.RELEASE</version>
+
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<developers>
+		<developer>
+			<name>Diego Magalhaes</name>
+			<organization>Bemobi</organization>
+			<id>diego.magalhaes</id>
+			<email>diego.magalhaes@bemobi.com.br</email>
+			<roles><role>Developer</role></roles>
+		</developer>
+	</developers>
+
+	<inceptionYear>2014</inceptionYear>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<start-class>com.dgomesbr.awsemrstarter.app.AwsEMRStarterApp</start-class>
+		<java.version>1.8</java.version>
+		<slf4j-api.version>1.7.9</slf4j-api.version>
+		<start-class>com.dgomesbr.awsemrstarter.app.AwsEMRStarterApp</start-class>
+		<aws.sdk.version>1.9.13</aws.sdk.version>
+		<maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+		<wagon-webdav-jackrabbit.version>2.8</wagon-webdav-jackrabbit.version>
+		<maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
+		<maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
+		<maven-reporting-api.version>3.0</maven-reporting-api.version>
+		<cobertura-maven-plugin.version>2.6</cobertura-maven-plugin.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>${aws.sdk.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.reporting</groupId>
+						<artifactId>maven-reporting-api</artifactId>
+						<version>${maven-reporting-api.version}</version>
+					</dependency>
+				</dependencies>
+				<version>${cobertura-maven-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<finalName>${project.name}</finalName>
+					<excludes>
+						<exclude>application.properties</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>${project.name}</finalName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven-assembly-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>deploy</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.class</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>${wagon-webdav-jackrabbit.version}</version>
+			</extension>
+		</extensions>
+	</build>
+
+</project>
