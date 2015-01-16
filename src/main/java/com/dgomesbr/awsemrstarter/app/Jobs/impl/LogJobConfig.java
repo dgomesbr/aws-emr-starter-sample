@@ -55,6 +55,6 @@ public class LogJobConfig implements JobConfig {
 
     @Override
     public List<Tag> tags() {
-        return Arrays.asList(new Tag().withKey("Project").withValue("TIM-REVIVE-EMR-CLUSTER"));
+        return Arrays.asList(new Tag().withKey("Project").withValue("AWS-EMR-STARTER-SAMPLE"));
     }
 }
